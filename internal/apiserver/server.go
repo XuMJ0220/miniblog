@@ -12,7 +12,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-// Config 配置结构体, 用于存储应用相关的配置
+// Config 运行时配置结构体, 用于存储应用相关的配置
 // 不用 viper.Get, 因为这种方式能更加清晰知道应用提供了哪些配置项
 type Config struct {
 	ServerMode string
@@ -32,7 +32,7 @@ func (cfg *Config) NewUnionServer() (*UnionServer, error) {
 // Run 运行应用.
 func (s *UnionServer) Run() error {
 	fmt.Printf("ServerMode from ServerOptions: %s\n", s.cfg.ServerMode)
-	fmt.Printf("ServerMode from Viper: %s\n\n", viper.GetString("jwt-key"))
+	fmt.Printf("ServerMode from Viper: %s\n\n", viper.GetString("server-mode"))
 
 	jsonData, _ := json.MarshalIndent(s.cfg, "", "  ")
 	fmt.Println(string(jsonData))

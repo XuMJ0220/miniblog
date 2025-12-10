@@ -71,7 +71,8 @@ func (o *ServerOptions) Validate() error {
 	return utilerrors.NewAggregate(errs)
 }
 
-// Config 基于 ServerOptions 构建 apiserver.Config.
+// Config 基于 ServerOptions 构建运行时配置 apiserver.Config.
+
 func (o *ServerOptions) Config() (*apiserver.Config, error) {
 	return &apiserver.Config{
 		ServerMode: o.ServerMode,
