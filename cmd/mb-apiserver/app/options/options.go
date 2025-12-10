@@ -1,8 +1,13 @@
+// Copyright 2024 许铭杰 (1044011439@qq.com). All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package options
 
 import (
 	"errors"
 	"fmt"
+	"miniblog/internal/apiserver"
 	"time"
 
 	"github.com/spf13/pflag"
@@ -64,4 +69,13 @@ func (o *ServerOptions) Validate() error {
 
 	// 合并所有错误并返回
 	return utilerrors.NewAggregate(errs)
+}
+
+// Config 基于 ServerOptions 构建 apiserver.Config.
+func (o *ServerOptions) Config() (*apiserver.Config, error) {
+	return &apiserver.Config{
+		ServerMode: o.ServerMode,
+		JWTKey:     o.JWTKey,
+		Expiration: o.Expiration,
+	}, nil
 }
