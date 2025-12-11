@@ -99,3 +99,8 @@ func PrintAndExitIfRequested() {
 		os.Exit(0)
 	}
 }
+
+// IsVersionRequested 检查是否请求了版本标志.
+func IsVersionRequested() bool {
+	return *versionFlag == VersionRaw || *versionFlag == VersionEnabled
+}

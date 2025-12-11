@@ -10,6 +10,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"miniblog/pkg/version"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -23,6 +25,11 @@ const (
 
 // onInitialize 设置需要读取的配置文件名、环境变量，并将其内容读取到 viper 中.
 func onInitialize() {
+	// 如果请求了版本标志，则跳过配置初始化
+	if version.IsVersionRequested() {
+		return
+	}
+
 	if configFile != "" {
 		// 从命令行选项指定的配置文件中读取
 		viper.SetConfigFile(configFile)
