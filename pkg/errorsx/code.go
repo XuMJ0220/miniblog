@@ -18,6 +18,9 @@ var (
 	// ErrUnauthenticated 表示认证失败.
 	ErrInvalidArgument = &ErrorX{Code: http.StatusUnauthorized, Reason: "Unauthenticated", Message: "Unauthenticated."}
 
+	// ErrUnauthenticated 表示认证失败.
+	ErrUnauthenticated = &ErrorX{Code: http.StatusUnauthorized, Reason: "Unauthenticated", Message: "Unauthenticated."}
+
 	// ErrPermissionDenied 表示请求没有权限.
 	ErrPermissionDenied = &ErrorX{Code: http.StatusForbidden, Reason: "PermissionDenied", Message: "Permission denied. Access to the requested resource is forbidden."}
 
