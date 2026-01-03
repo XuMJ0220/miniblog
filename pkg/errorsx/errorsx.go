@@ -1,3 +1,7 @@
+// Copyright 2024 许铭杰 (1044011439@qq.com). All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package errorsx
 
 import (
@@ -73,24 +77,24 @@ func (err *ErrorX) GRPCStatus() *status.Status {
 	return s
 }
 
-// WithRequestID 设置请求 ID.  
-func (err *ErrorX) WithRequestID(requestID string) *ErrorX{
-	return err.KV("X-Request-ID",requestID)
+// WithRequestID 设置请求 ID.
+func (err *ErrorX) WithRequestID(requestID string) *ErrorX {
+	return err.KV("X-Request-ID", requestID)
 }
 
 // Is 判断当前错误是否与目标错误匹配.
 // 它会递归遍历错误链，并比较 ErrorX 实例的 Code 和 Reason 字段.
 // 如果 Code 和 Reason 均相等，则返回 true；否则返回 false.
-func (err *ErrorX) Is(target error) bool{
-	if errx:=new(ErrorX);errors.As(target,&errx){
+func (err *ErrorX) Is(target error) bool {
+	if errx := new(ErrorX); errors.As(target, &errx) {
 		return errx.Code == err.Code && errx.Reason == err.Reason
 	}
 	return false
 }
 
 // Code 返回错误的 HTTP 代码.
-func Code(err error) int{
-	if err == nil{
+func Code(err error) int {
+	if err == nil {
 		return http.StatusOK
 	}
 	return FromError(err).Code
@@ -105,7 +109,7 @@ func Reason(err error) string {
 }
 
 // FromError 尝试将一个通用的 error 转换为自定义的 *ErrorX 类型.
-func FromError(err error)*ErrorX{
+func FromError(err error) *ErrorX {
 	// 如果传入的错误是 nil，则直接返回 nil，表示没有错误需要处理.
 	if err == nil {
 		return nil

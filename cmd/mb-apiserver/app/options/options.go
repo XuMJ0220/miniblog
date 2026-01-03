@@ -36,6 +36,8 @@ type ServerOptions struct {
 	Expiration time.Duration `json:"expiration" mapstructure:"expiration"`
 	// GRPCOptions 包含 gRPC 配置选项.
 	GRPCOptions *genericoptions.GRPCOptions `json:"grpc" mapstructure:"grpc"`
+	// HTTPOptions 包含 HTTP 配置选项.
+	HTTPOptions *genericoptions.HTTPOptions `json:"http" mapstructure:"http"`
 }
 
 // NewServerOptions 创建带有默认值的 ServerOptions 实例.
@@ -45,8 +47,10 @@ func NewServerOptions() *ServerOptions {
 		JWTKey:      "Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5",
 		Expiration:  2 * time.Hour,
 		GRPCOptions: genericoptions.NewGRPCOptions(),
+		HTTPOptions: genericoptions.NewHTTPOptions(),
 	}
 	opts.GRPCOptions.Addr = ":6666"
+	opts.HTTPOptions.Addr = ":5555"
 	return opts
 }
 
@@ -62,6 +66,7 @@ func (o *ServerOptions) AddFlags(fs *pflag.FlagSet) {
 	fs.DurationVar(&o.Expiration, "expiration", o.Expiration, "The expiration duration of JWT tokens.")
 
 	o.GRPCOptions.AddFlags(fs, "grpc")
+	o.HTTPOptions.AddFlags(fs, "http")
 }
 
 // Validate 校验 ServerOptions 中的选项是否合法.
@@ -95,5 +100,6 @@ func (o *ServerOptions) Config() (*apiserver.Config, error) {
 		JWTKey:      o.JWTKey,
 		Expiration:  o.Expiration,
 		GRPCOptions: o.GRPCOptions,
+		HTTPOptions: o.HTTPOptions,
 	}, nil
 }
