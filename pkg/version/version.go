@@ -66,12 +66,12 @@ func (info Info) Text() string {
 // Get 返回详尽的代码库版本信息, 用来标明二进制文件由哪个版本的代码构建.
 func Get() Info {
 	return Info{
-		GitVersion: gitVersion,
-		GitCommit: gitCommit,
+		GitVersion:   gitVersion,
+		GitCommit:    gitCommit,
 		GitTreeState: gitTreeState,
-		BuildDate: buildDate,
-		GoVersion: runtime.Version(),
-		Compiler: runtime.Compiler,
-		Platform: fmt.Sprintf("%s/%s",runtime.GOOS,runtime.GOARCH),
+		BuildDate:    buildDate,
+		GoVersion:    runtime.Version(),
+		Compiler:     runtime.Compiler,
+		Platform:     fmt.Sprintf("%s/%s", runtime.GOOS, runtime.GOARCH),
 	}
 }
