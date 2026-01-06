@@ -17,13 +17,13 @@ type HTTPServer struct {
 func NewHTTPServer(
 	httpOptions *genericoptions.HTTPOptions,
 	handler http.Handler,
-) (*HTTPServer, error) {
+) (*HTTPServer) {
 	return &HTTPServer{
 		srv: &http.Server{
 			Addr:    httpOptions.Addr,
 			Handler: handler,
 		},
-	}, nil
+	}
 }
 
 // RunOrDie 启动 HTTP 服务器并在出错时记录致命错误.
