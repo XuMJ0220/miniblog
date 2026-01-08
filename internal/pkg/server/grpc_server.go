@@ -22,6 +22,7 @@ type GRPCServer struct {
 // NewGRPCServer 创建一个新的 GRPC 服务器实例.
 func NewGRPCServer(
 	grpcOptions *genericoptions.GRPCOptions,
+	serverOptions []grpc.ServerOption,
 	registerServer func(grpc.ServiceRegistrar),
 ) (*GRPCServer, error) {
 	lis, err := net.Listen(grpcOptions.Network, grpcOptions.Addr)
@@ -30,7 +31,9 @@ func NewGRPCServer(
 		return nil, err
 	}
 
-	grpcsrv := grpc.NewServer()
+	grpcsrv := grpc.NewServer(serverOptions...)
+	
+	registerHealthServer(grpcsrv)
 	registerServer(grpcsrv)
 	reflection.Register(grpcsrv)
 
