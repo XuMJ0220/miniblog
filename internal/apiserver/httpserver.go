@@ -1,3 +1,7 @@
+// Copyright 2024 许铭杰 (1044011439@qq.com). All rights reserved.
+// Use of this source code is governed by a MIT style
+// license that can be found in the LICENSE file.
+
 package apiserver
 
 import (
@@ -9,6 +13,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	handler "miniblog/internal/apiserver/handler/http"
+	mw "miniblog/internal/pkg/middleware/http"
 )
 
 // ginServer 定义一个使用 Gin 框架开发的 HTTP 服务器.
@@ -24,11 +29,15 @@ func (c *ServerConfig) NewGinServer() server.Server {
 	// 创建 Gin 引擎
 	engine := gin.New()
 
+	// 注册全局中间件，用于恢复 panic、设置 HTTP 头、添加请求 ID 等
+	// 注意：中间件需要在注册路由之前调用，否则对已注册路由不生效。
+	engine.Use(gin.Recovery(), mw.NoCache, mw.Cors, mw.Secure, mw.RequestIDMiddleware())
+
 	// 注册 REST API 路由
 	c.InstallRESTAPI(engine)
 
 	// 创建 HTTP 服务器
-	httpsrv:=server.NewHTTPServer(c.cfg.HTTPOptions,engine)
+	httpsrv := server.NewHTTPServer(c.cfg.HTTPOptions, engine)
 
 	return &ginServer{srv: httpsrv}
 }
@@ -39,10 +48,10 @@ func (c *ServerConfig) InstallRESTAPI(engine *gin.Engine) {
 	InstallGenericAPI(engine)
 
 	// 创建核心业务处理器
-	handler:=handler.NewHandler()
-	
+	handler := handler.NewHandler()
+
 	// 注册健康检查接口
-	engine.GET("/healthz",handler.Healthz)
+	engine.GET("/healthz", handler.Healthz)
 }
 
 // InstallGenericAPI 注册业务无关的路由，例如 pprof、404 处理等.
@@ -51,8 +60,8 @@ func InstallGenericAPI(engin *gin.Engine) {
 	pprof.Register(engin)
 
 	// 注册 404 路由处理
-	engin.NoRoute(func(c *gin.Context){
-		c.JSON(http.StatusNotFound,"Page not found.")
+	engin.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, "Page not found.")
 	})
 }
 
