@@ -11,6 +11,7 @@ require (
 	github.com/google/wire v0.7.0
 	github.com/gosuri/uitable v0.0.4
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
+	github.com/jinzhu/copier v0.4.0
 	github.com/redis/go-redis/v9 v9.17.2
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.10.2
