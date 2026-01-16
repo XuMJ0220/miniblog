@@ -40,6 +40,7 @@ type userBiz struct {
 	store store.IStore
 }
 
+// 确保 userBiz 实现了 UserBiz 接口. 
 var _ UserBiz = (*userBiz)(nil)
 
 func New(store store.IStore) *userBiz {

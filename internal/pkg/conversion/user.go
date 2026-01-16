@@ -19,3 +19,4 @@ func UserV1ToUserModel(protoUser *apiv1.User) *model.UserM{
 	_ = core.CopyWithConverters(&userModel,protoUser)
 	return &userModel
 }
+
