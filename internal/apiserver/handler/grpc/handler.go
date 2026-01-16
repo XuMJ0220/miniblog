@@ -5,14 +5,19 @@
 package grpc
 
 import (
+	"miniblog/internal/apiserver/biz"
 	apiv1 "miniblog/pkg/api/apiserver/v1"
 )
 
 // Handler 负责处理模块的请求.
 type Handler struct {
 	apiv1.UnimplementedMiniBlogServer // 提供默认实现
+
+	biz biz.IBiz 
 }
 
-func NewHandler() *Handler {
-	return &Handler{}
+func NewHandler(biz biz.IBiz) *Handler {
+	return &Handler{
+		biz: biz,
+	}
 }
