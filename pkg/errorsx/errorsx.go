@@ -1,7 +1,3 @@
-// Copyright 2024 许铭杰 (1044011439@qq.com). All rights reserved.
-// Use of this source code is governed by a MIT style
-// license that can be found in the LICENSE file.
-
 package errorsx
 
 import (
@@ -14,22 +10,22 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-// Errorx 定义了使用的错误类型, 用于描述错误的详细信息.
+// ErrorX 定义了 OneX 项目体系中使用的错误类型，用于描述错误的详细信息.
 type ErrorX struct {
 	// Code 表示错误的 HTTP 状态码，用于与客户端进行交互时标识错误的类型.
 	Code int `json:"code,omitempty"`
 
-	// Reason 表示错误发生的原因, 通常为业务错误码, 用于精准定位问题.
+	// Reason 表示错误发生的原因，通常为业务错误码，用于精准定位问题.
 	Reason string `json:"reason,omitempty"`
 
-	// Message 表示简短的错误信息, 通常可直接暴露给用户查看.
+	// Message 表示简短的错误信息，通常可直接暴露给用户查看.
 	Message string `json:"message,omitempty"`
 
-	// Metadata 用于存储与错误相关的额外信息, 可以包含上下文或调试信息.
+	// Metadata 用于存储与该错误相关的额外元信息，可以包含上下文或调试信息.
 	Metadata map[string]string `json:"metadata,omitempty"`
 }
 
-// 创建一个新的错误.
+// New 创建一个新的错误.
 func New(code int, reason string, format string, args ...any) *ErrorX {
 	return &ErrorX{
 		Code:    code,
@@ -62,7 +58,7 @@ func (err *ErrorX) KV(kvs ...string) *ErrorX {
 	}
 
 	for i := 0; i < len(kvs); i += 2 {
-		// kvs 必须是成对出现的
+		// kvs 必须是成对的
 		if i+1 < len(kvs) {
 			err.Metadata[kvs[i]] = kvs[i+1]
 		}
@@ -79,7 +75,7 @@ func (err *ErrorX) GRPCStatus() *status.Status {
 
 // WithRequestID 设置请求 ID.
 func (err *ErrorX) WithRequestID(requestID string) *ErrorX {
-	return err.KV("X-Request-ID", requestID)
+	return err.KV("X-Request-ID", requestID) // 设置请求 ID
 }
 
 // Is 判断当前错误是否与目标错误匹配.
@@ -95,7 +91,7 @@ func (err *ErrorX) Is(target error) bool {
 // Code 返回错误的 HTTP 代码.
 func Code(err error) int {
 	if err == nil {
-		return http.StatusOK
+		return http.StatusOK //nolint:mnd
 	}
 	return FromError(err).Code
 }
@@ -126,12 +122,12 @@ func FromError(err error) *ErrorX {
 	// 则返回一个带有默认值的 ErrorX，表示是一个未知类型的错误.
 	gs, ok := status.FromError(err)
 	if !ok {
-		return New(ErrInternal.Code, ErrInternal.Reason, err.Error())
+		return New(ErrInternal.Code, ErrInternal.Reason, "%s", err.Error())
 	}
 
 	// 如果 err 是 gRPC 的错误类型，会成功返回一个 gRPC status 对象（gs）.
 	// 使用 gRPC 状态中的错误代码和消息创建一个 ErrorX.
-	ret := New(httpstatus.FromGRPCCode(gs.Code()), ErrInternal.Reason, gs.Message())
+	ret := New(httpstatus.FromGRPCCode(gs.Code()), ErrInternal.Reason, "%s", gs.Message())
 
 	// 遍历 gRPC 错误详情中的所有附加信息（Details）.
 	for _, detail := range gs.Details() {
