@@ -12,6 +12,7 @@ type PostExpansion interface {
 type postBiz struct {
 	store store.IStore
 }
+
 var _ PostBiz = (*postBiz)(nil)
 
 func New(store store.IStore) *postBiz {

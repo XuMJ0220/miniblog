@@ -1,11 +1,8 @@
-// Copyright 2024 许铭杰 (1044011439@qq.com). All rights reserved.
-// Use of this source code is governed by a MIT style
-// license that can be found in the LICENSE file.
-
 package errorsx
 
 import "net/http"
 
+// errorsx 预定义标准的错误.
 var (
 	// OK 代表请求成功.
 	OK = &ErrorX{Code: http.StatusOK, Message: ""}
@@ -19,8 +16,8 @@ var (
 	// ErrBind 表示请求体绑定错误.
 	ErrBind = &ErrorX{Code: http.StatusBadRequest, Reason: "BindError", Message: "Error occurred while binding the request body to the struct."}
 
-	// ErrUnauthenticated 表示认证失败.
-	ErrInvalidArgument = &ErrorX{Code: http.StatusUnauthorized, Reason: "Unauthenticated", Message: "Unauthenticated."}
+	// ErrInvalidArgument 表示参数验证失败.
+	ErrInvalidArgument = &ErrorX{Code: http.StatusBadRequest, Reason: "InvalidArgument", Message: "Argument verification failed."}
 
 	// ErrUnauthenticated 表示认证失败.
 	ErrUnauthenticated = &ErrorX{Code: http.StatusUnauthorized, Reason: "Unauthenticated", Message: "Unauthenticated."}

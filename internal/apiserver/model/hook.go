@@ -2,6 +2,7 @@ package model
 
 import (
 	"miniblog/internal/pkg/rid"
+	"miniblog/pkg/authn"
 
 	"gorm.io/gorm"
 )
@@ -10,6 +11,18 @@ var (
 	UserPrefix = "user"
 	PostPrefix = "post"
 )
+
+// BeforeCreate 在创建数据库记录之前加密明文密码.
+func (m *UserM) BeforeCreate(tx *gorm.DB) error {
+	// Encrypt the user password.
+	var err error
+	m.Password, err = authn.Encrypt(m.Password)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 // AfterCreate 在创建数据库记录之后生成 userID.
 func (m *UserM) AfterCreate(tx *gorm.DB) error {
