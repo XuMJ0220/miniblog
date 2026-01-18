@@ -6,15 +6,21 @@ package apiserver
 
 import (
 	"context"
+	"miniblog/internal/apiserver/biz"
+	"miniblog/internal/pkg/contextx"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/server"
 	"os"
 	"os/signal"
 	"time"
 
+	"miniblog/internal/apiserver/store"
 	genericoptions "miniblog/pkg/options"
+	"miniblog/pkg/store/where"
 
 	"syscall"
+
+	"gorm.io/gorm"
 )
 
 const (
@@ -34,11 +40,12 @@ const (
 // Config 运行时配置结构体, 用于存储应用相关的配置
 // 不用 viper.Get, 因为这种方式能更加清晰知道应用提供了哪些配置项
 type Config struct {
-	ServerMode  string
-	JWTKey      string
-	Expiration  time.Duration
-	GRPCOptions *genericoptions.GRPCOptions
-	HTTPOptions *genericoptions.HTTPOptions
+	ServerMode   string
+	JWTKey       string
+	Expiration   time.Duration
+	GRPCOptions  *genericoptions.GRPCOptions
+	HTTPOptions  *genericoptions.HTTPOptions
+	MySQLOptions *genericoptions.MySQLOptions
 }
 
 // UnionServer 定义一个联合服务器. 根据 ServerMode 决定要启动的服务器类型.
@@ -58,11 +65,17 @@ type UnionServer struct {
 // ServerConfig 包含服务器的核心依赖和配置.
 type ServerConfig struct {
 	cfg *Config
+	biz biz.IBiz
 }
 
 // NewUnionServer 根据配置创建联合服务器.
 func (cfg *Config) NewUnionServer() (*UnionServer, error) {
 	// 一些初始化代码
+
+	// 注册租赁，在之后调用 where.T(ctx)，就相当于加了个 userID = 用户明确的用户ID 的条件
+	where.RegisterTenant("userID", func(ctx context.Context) string {
+		return contextx.UserID(ctx)
+	})
 
 	// 创建服务配置，这些配置可用来创建服务器
 	serverConfig, err := cfg.NewServerConfig()
@@ -117,5 +130,20 @@ func (s *UnionServer) Run() error {
 // NewServerConfig 创建一个 *ServerConfig 实例.
 // 进阶：这里其实可以使用依赖注入的方式，来创建 *ServerConfig.
 func (cfg *Config) NewServerConfig() (*ServerConfig, error) {
-	return &ServerConfig{cfg: cfg}, nil
+	// 初始化数据库连接
+	db, err := cfg.NewDB()
+	if err != nil {
+		return nil, err
+	}
+	store := store.NewStore(db)
+
+	return &ServerConfig{
+		cfg: cfg,
+		biz: biz.NewBiz(store),
+	}, nil
+}
+
+// NewDB 创建一个 *gorm.DB 实例.
+func (cfg *Config) NewDB() (*gorm.DB, error) {
+	return cfg.MySQLOptions.NewDB()
 }

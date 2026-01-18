@@ -38,19 +38,23 @@ type ServerOptions struct {
 	GRPCOptions *genericoptions.GRPCOptions `json:"grpc" mapstructure:"grpc"`
 	// HTTPOptions 包含 HTTP 配置选项.
 	HTTPOptions *genericoptions.HTTPOptions `json:"http" mapstructure:"http"`
+	// MySQLOptions 包含 MySQL 配置选项.
+	MySQLOptions *genericoptions.MySQLOptions `json:"mysql" mapstructure:"mysql"`
 }
 
 // NewServerOptions 创建带有默认值的 ServerOptions 实例.
 func NewServerOptions() *ServerOptions {
 	opts := &ServerOptions{
-		ServerMode:  apiserver.GRPCGatewayServerMode,
-		JWTKey:      "Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5",
-		Expiration:  2 * time.Hour,
-		GRPCOptions: genericoptions.NewGRPCOptions(),
-		HTTPOptions: genericoptions.NewHTTPOptions(),
+		ServerMode:   apiserver.GRPCGatewayServerMode,
+		JWTKey:       "Rtg8BPKNEf2mB4mgvKONGPZZQSaJWNLijxR42qRgq0iBb5",
+		Expiration:   2 * time.Hour,
+		GRPCOptions:  genericoptions.NewGRPCOptions(),
+		HTTPOptions:  genericoptions.NewHTTPOptions(),
+		MySQLOptions: genericoptions.NewMySQLOptions(),
 	}
 	opts.GRPCOptions.Addr = ":6666"
 	opts.HTTPOptions.Addr = ":5555"
+	opts.MySQLOptions.Addr = ":3306"
 	return opts
 }
 
@@ -96,10 +100,11 @@ func (o *ServerOptions) Validate() error {
 // ----------- 在运行时配置可用 -----------
 func (o *ServerOptions) Config() (*apiserver.Config, error) {
 	return &apiserver.Config{
-		ServerMode:  o.ServerMode,
-		JWTKey:      o.JWTKey,
-		Expiration:  o.Expiration,
-		GRPCOptions: o.GRPCOptions,
-		HTTPOptions: o.HTTPOptions,
+		ServerMode:   o.ServerMode,
+		JWTKey:       o.JWTKey,
+		Expiration:   o.Expiration,
+		GRPCOptions:  o.GRPCOptions,
+		HTTPOptions:  o.HTTPOptions,
+		MySQLOptions: o.MySQLOptions,
 	}, nil
 }
