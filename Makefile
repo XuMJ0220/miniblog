@@ -73,4 +73,5 @@ protoc: # 编译 protobuf 文件.
 		--go-grpc_out=paths=source_relative:$(APIROOT)   \
 		--grpc-gateway_out=allow_delete_body=true,paths=source_relative:$(APIROOT) \
 		$(shell find $(APIROOT) -name *.proto)
+		@find . -name "*.pb.go" -exec protoc-go-inject-tag -input={} \;
 		

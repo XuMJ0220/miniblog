@@ -8,6 +8,8 @@ type (
 	requestIDKey struct{}
 	// usernameKey 定义用户名的上下文键.
 	userNameKey struct{}
+	// userIDKey 定义用户 ID 的上下文键.
+	userIDKey struct{}
 )
 
 // WithRequestID 将请求 ID 存放到上下文中.
@@ -21,7 +23,14 @@ func RequestID(ctx context.Context) string {
 	return requestID
 }
 
-func Username(ctx context.Context) string{
-	username,_:=ctx.Value(userNameKey{}).(string)
+// Username 从上下文中提取用户名.
+func Username(ctx context.Context) string {
+	username, _ := ctx.Value(userNameKey{}).(string)
 	return username
+}
+
+// UserID 从上下文中提取用户 ID.
+func UserID(ctx context.Context) string {
+	userID, _ := ctx.Value(userIDKey{}).(string)
+	return userID
 }
