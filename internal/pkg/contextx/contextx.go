@@ -29,6 +29,11 @@ func Username(ctx context.Context) string {
 	return username
 }
 
+// WithUserID 将用户 ID 存放到上下文中.
+func WithUserID(ctx context.Context, userID string) context.Context {
+	return context.WithValue(ctx, userIDKey{}, userID)
+}
+
 // UserID 从上下文中提取用户 ID.
 func UserID(ctx context.Context) string {
 	userID, _ := ctx.Value(userIDKey{}).(string)
