@@ -15,6 +15,7 @@
 package v1
 
 import (
+	_ "github.com/onexstack/protoc-gen-defaults/defaults"
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
@@ -982,11 +983,11 @@ var File_apiserver_v1_user_proto protoreflect.FileDescriptor
 
 const file_apiserver_v1_user_proto_rawDesc = "" +
 	"\n" +
-	"\x17apiserver/v1/user.proto\x12\x02v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x94\x02\n" +
+	"\x17apiserver/v1/user.proto\x12\x02v1\x1a\x1fgoogle/protobuf/timestamp.proto\x1a,github.com/onexstack/defaults/defaults.proto\"\xa4\x02\n" +
 	"\x04User\x12\x16\n" +
 	"\x06userID\x18\x01 \x01(\tR\x06userID\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\x12\x1a\n" +
-	"\bnickname\x18\x03 \x01(\tR\bnickname\x12\x14\n" +
+	"\busername\x18\x02 \x01(\tR\busername\x12*\n" +
+	"\bnickname\x18\x03 \x01(\tB\x0e\x9aI\vr\tzhang sanR\bnickname\x12\x14\n" +
 	"\x05email\x18\x04 \x01(\tR\x05email\x12\x14\n" +
 	"\x05phone\x18\x05 \x01(\tR\x05phone\x12\x1c\n" +
 	"\tpostCount\x18\x06 \x01(\x03R\tpostCount\x128\n" +
