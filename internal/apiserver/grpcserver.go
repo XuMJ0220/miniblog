@@ -38,6 +38,8 @@ func (c *ServerConfig) NewGRPCServerOr() (server.Server, error) {
 			mw.RequestIDInterceptor(),
 			// bypass 拦截其
 			mw.AuthnBypasswInterceptor(),
+			// 请求参数设置默认值
+			mw.DefaulterInterceptor(),
 		),
 	}
 

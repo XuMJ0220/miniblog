@@ -16,6 +16,8 @@ require (
 	github.com/jinzhu/copier v0.4.0
 	github.com/nicksnyder/go-i18n/v2 v2.6.1
 	github.com/onexstack/onexstack v0.3.19
+	github.com/onexstack/protoc-gen-defaults v0.0.2
+	github.com/prometheus/common v0.65.0
 	github.com/redis/go-redis/v9 v9.17.2
 	github.com/sony/sonyflake v1.2.0
 	github.com/spf13/cobra v1.10.2
@@ -84,6 +86,7 @@ require (
 	github.com/modern-go/reflect2 v1.0.3-0.20250322232337-35a7c28c31ee // indirect
 	github.com/pelletier/go-toml/v2 v2.2.4 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
+	github.com/prometheus/client_model v0.6.2 // indirect
 	github.com/quic-go/qpack v0.5.1 // indirect
 	github.com/quic-go/quic-go v0.55.0 // indirect
 	github.com/rogpeppe/go-internal v1.14.1 // indirect
