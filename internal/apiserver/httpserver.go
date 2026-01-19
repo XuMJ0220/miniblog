@@ -32,7 +32,12 @@ func (c *ServerConfig) NewGinServer() server.Server {
 
 	// 注册全局中间件，用于恢复 panic、设置 HTTP 头、添加请求 ID 等
 	// 注意：中间件需要在注册路由之前调用，否则对已注册路由不生效。
-	engine.Use(gin.Recovery(), mw.NoCache, mw.Cors, mw.Secure, mw.RequestIDMiddleware())
+	engine.Use(
+		gin.Recovery(),
+		mw.NoCache, mw.Cors,
+		mw.Secure, mw.RequestIDMiddleware(),
+		mw.AuthnBypasswInterceptor(),
+	)
 
 	// 注册 REST API 路由
 	c.InstallRESTAPI(engine)
