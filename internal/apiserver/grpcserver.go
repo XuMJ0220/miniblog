@@ -36,6 +36,8 @@ func (c *ServerConfig) NewGRPCServerOr() (server.Server, error) {
 		grpc.ChainUnaryInterceptor(
 			// 请求 ID 拦截器
 			mw.RequestIDInterceptor(),
+			// bypass 拦截其
+			mw.AuthnBypasswInterceptor(),
 		),
 	}
 
