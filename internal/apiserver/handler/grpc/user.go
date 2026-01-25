@@ -11,8 +11,8 @@ func (h *Handler) CreateUser(ctx context.Context, rq *apiv1.CreateUserRequest) (
 }
 
 // UpdateUser 更新用户信息.
-func (h *Handler)UpdateUser(ctx context.Context,rq *apiv1.UpdateUserRequest)(*apiv1.UpdateUserResponse,error){
-	return h.biz.UserV1().Update(ctx,rq)
+func (h *Handler) UpdateUser(ctx context.Context, rq *apiv1.UpdateUserRequest) (*apiv1.UpdateUserResponse, error) {
+	return h.biz.UserV1().Update(ctx, rq)
 }
 
 // DeleteUser 删除用户.

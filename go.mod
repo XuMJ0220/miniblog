@@ -2,6 +2,9 @@ module miniblog
 
 go 1.24.5
 
+// 解决 cloud.google.com/go 版本冲突
+replace cloud.google.com/go => cloud.google.com/go v0.115.0
+
 require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2
@@ -12,6 +15,7 @@ require (
 	github.com/google/uuid v1.6.0
 	github.com/google/wire v0.7.0
 	github.com/gosuri/uitable v0.0.4
+	github.com/grpc-ecosystem/go-grpc-middleware/v2 v2.3.2
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4
 	github.com/jinzhu/copier v0.4.0
 	github.com/nicksnyder/go-i18n/v2 v2.6.1

@@ -13,7 +13,7 @@ import (
 type Handler struct {
 	apiv1.UnimplementedMiniBlogServer // 提供默认实现
 
-	biz biz.IBiz 
+	biz biz.IBiz
 }
 
 func NewHandler(biz biz.IBiz) *Handler {

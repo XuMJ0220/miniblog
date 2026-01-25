@@ -14,8 +14,8 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 	goi18n "github.com/nicksnyder/go-i18n/v2/i18n"
 
-	"miniblog/pkg/authn"
 	"miniblog/pkg/I18n"
+	"miniblog/pkg/authn"
 )
 
 const (

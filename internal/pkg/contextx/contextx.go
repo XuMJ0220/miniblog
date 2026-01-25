@@ -23,6 +23,10 @@ func RequestID(ctx context.Context) string {
 	return requestID
 }
 
+func WithUsername(ctx context.Context, userName string) context.Context {
+	return context.WithValue(ctx, userNameKey{}, userName)
+}
+
 // Username 从上下文中提取用户名.
 func Username(ctx context.Context) string {
 	username, _ := ctx.Value(userNameKey{}).(string)
