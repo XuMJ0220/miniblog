@@ -14,8 +14,8 @@ import (
 	"github.com/spf13/pflag"
 	"gorm.io/gorm"
 
-	gormlogger "miniblog/pkg/logger/slog/gorm"
 	"miniblog/pkg/db"
+	gormlogger "miniblog/pkg/logger/slog/gorm"
 )
 
 var _ IOptions = (*MySQLOptions)(nil)

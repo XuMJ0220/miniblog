@@ -13,6 +13,8 @@ const (
 	XRequestID = "x-request-id"
 	// XUserID 用来定义上下文中的键，代表用户 ID.
 	XUserID = "x-user-id"
+	// XUsername 用来定义上下文的键，代表请求用户名.
+	XUsername = "x-username"
 )
 
 // 定义其它常量

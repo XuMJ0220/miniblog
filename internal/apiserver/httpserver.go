@@ -34,9 +34,10 @@ func (c *ServerConfig) NewGinServer() server.Server {
 	// 注意：中间件需要在注册路由之前调用，否则对已注册路由不生效。
 	engine.Use(
 		gin.Recovery(),
-		mw.NoCache, mw.Cors,
-		mw.Secure, mw.RequestIDMiddleware(),
-		mw.AuthnBypasswInterceptor(),
+		mw.NoCache,
+		mw.Cors,
+		mw.Secure,
+		mw.RequestIDMiddleware(),
 	)
 
 	// 注册 REST API 路由
@@ -54,7 +55,7 @@ func (c *ServerConfig) InstallRESTAPI(engine *gin.Engine) {
 	InstallGenericAPI(engine)
 
 	// 创建核心业务处理器
-	handler := handler.NewHandler(c.biz)
+	handler := handler.NewHandler(c.biz, c.val)
 
 	// 注册健康检查接口
 	engine.GET("/healthz", handler.Healthz)
@@ -62,7 +63,10 @@ func (c *ServerConfig) InstallRESTAPI(engine *gin.Engine) {
 	engine.POST("/login", handler.Login)
 	engine.PUT("/refresh-token", handler.RefreshToken)
 
-	authMiddlewares := []gin.HandlerFunc{}
+	authMiddlewares := []gin.HandlerFunc{
+		mw.AuthnMiddleware(c.retriever),
+		mw.AuthzMiddleware(c.authz),
+	}
 
 	// 注册 v1 版本 API 路由分组
 	v1 := engine.Group("/v1")

@@ -121,7 +121,7 @@ func resolveModelPackagePath(defaultPath string) string {
 // createGenerator 初始化并返回一个新的生成器实例.
 func createGenerator(packagePath string) *gen.Generator {
 	return gen.NewGenerator(gen.Config{
-		Mode:              gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext, 
+		Mode:              gen.WithDefaultQuery | gen.WithQueryInterface | gen.WithoutContext,
 		ModelPkgPath:      packagePath,
 		WithUnitTest:      true,
 		FieldNullable:     true,  // 对于数据库中可空的字段，使用指针类型，以此便可以区分零值和空。

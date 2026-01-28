@@ -7,16 +7,21 @@ package apiserver
 import (
 	"context"
 	"miniblog/internal/apiserver/biz"
+	"miniblog/internal/apiserver/model"
 	"miniblog/internal/pkg/contextx"
 	"miniblog/internal/pkg/log"
 	"miniblog/internal/pkg/server"
+	"miniblog/internal/pkg/validation"
 	"os"
 	"os/signal"
 	"time"
 
 	"miniblog/internal/apiserver/store"
+	mw "miniblog/internal/pkg/middleware/grpc"
+	"miniblog/pkg/authz"
 	genericoptions "miniblog/pkg/options"
 	"miniblog/pkg/store/where"
+	"miniblog/pkg/token"
 
 	"syscall"
 
@@ -64,13 +69,19 @@ type UnionServer struct {
 
 // ServerConfig 包含服务器的核心依赖和配置.
 type ServerConfig struct {
-	cfg *Config
-	biz biz.IBiz
+	cfg       *Config
+	biz       biz.IBiz
+	val       *validation.Validator
+	retriever mw.UserRetriever
+	authz     mw.Authorizer
 }
 
 // NewUnionServer 根据配置创建联合服务器.
 func (cfg *Config) NewUnionServer() (*UnionServer, error) {
 	// 一些初始化代码
+
+	// 初始化 token 包
+	token.Init(cfg.JWTKey, "userID", 2*time.Hour)
 
 	// 注册租赁，在之后调用 where.T(ctx)，就相当于加了个 userID = 用户明确的用户ID 的条件
 	where.RegisterTenant("userID", func(ctx context.Context) string {
@@ -137,13 +148,33 @@ func (cfg *Config) NewServerConfig() (*ServerConfig, error) {
 	}
 	store := store.NewStore(db)
 
+	// 创建授权器
+	authz, err := authz.NewAuthz(db)
+	if err != nil {
+		log.Errorw("Failed to new authorizer", "err", err)
+		return nil, err
+	}
+
 	return &ServerConfig{
-		cfg: cfg,
-		biz: biz.NewBiz(store),
+		cfg:       cfg,
+		biz:       biz.NewBiz(store, authz),
+		val:       validation.New(store),
+		retriever: &UserRetriever{store: store},
+		authz:     authz,
 	}, nil
 }
 
 // NewDB 创建一个 *gorm.DB 实例.
 func (cfg *Config) NewDB() (*gorm.DB, error) {
 	return cfg.MySQLOptions.NewDB()
+}
+
+// UserRetriever 定义一个用户数据获取器. 用来获取用户信息.
+type UserRetriever struct {
+	store store.IStore
+}
+
+// GetUser 根据用户 ID 获取用户信息.
+func (r *UserRetriever) GetUser(ctx context.Context, userID string) (*model.UserM, error) {
+	return r.store.User().Get(ctx, where.F("userID", userID))
 }

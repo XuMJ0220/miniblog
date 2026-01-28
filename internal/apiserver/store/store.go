@@ -56,7 +56,7 @@ func NewStore(db *gorm.DB) IStore {
 func (store *datastore) DB(tx context.Context, wheres ...where.Where) *gorm.DB {
 	db := store.core
 	// 从上下文中提取事物实例
-	if tx,ok:=tx.Value(transactionKey{}).(*gorm.DB);ok{
+	if tx, ok := tx.Value(transactionKey{}).(*gorm.DB); ok {
 		db = tx
 	}
 
@@ -81,7 +81,7 @@ func (store *datastore) TX(ctx context.Context, fn func(ctx context.Context) err
 }
 
 // Users 返回一个实现了 UserStore 接口的实例.
-func (store *datastore) User() UserStore{
+func (store *datastore) User() UserStore {
 	return newUserStore(store)
 }
 

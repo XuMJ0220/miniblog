@@ -32,7 +32,7 @@ func NewGRPCServer(
 	}
 
 	grpcsrv := grpc.NewServer(serverOptions...)
-	
+
 	registerHealthServer(grpcsrv)
 	registerServer(grpcsrv)
 	reflection.Register(grpcsrv)

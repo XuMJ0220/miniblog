@@ -53,8 +53,7 @@ func NewMiniBlogCommand() *cobra.Command {
 		SilenceUsage: true,
 		// 指定调用 cmd.Execute() 时，执行的 Run 函数
 		RunE: func(cmd *cobra.Command, args []string) error {
-			run(opts)
-			return nil
+			return run(opts)
 		},
 		// 设置命令运行时的参数检查，不需要指定命令行参数。例如：./miniblog param1 param2
 		Args: cobra.NoArgs,
