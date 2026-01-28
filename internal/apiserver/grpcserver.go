@@ -57,6 +57,7 @@ func (c *ServerConfig) NewGRPCServerOr() (server.Server, error) {
 		func(s grpc.ServiceRegistrar) {
 			apiv1.RegisterMiniBlogServer(s, handler.NewHandler(c.biz))
 		},
+		c.cfg.TLSOptions,
 	)
 	if err != nil {
 		return nil, err
@@ -80,6 +81,7 @@ func (c *ServerConfig) NewGRPCServerOr() (server.Server, error) {
 		func(mux *runtime.ServeMux, conn *grpc.ClientConn) error {
 			return apiv1.RegisterMiniBlogHandler(context.Background(), mux, conn)
 		},
+		c.cfg.TLSOptions,
 	)
 	if err != nil {
 		return nil, err

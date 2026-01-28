@@ -40,6 +40,8 @@ type ServerOptions struct {
 	HTTPOptions *genericoptions.HTTPOptions `json:"http" mapstructure:"http"`
 	// MySQLOptions 包含 MySQL 配置选项.
 	MySQLOptions *genericoptions.MySQLOptions `json:"mysql" mapstructure:"mysql"`
+	// TLSOptions 包含 TLS 配置选项.
+	TLSOptions *genericoptions.TLSOptions `json:"tls" mapstructure:"tls"`
 }
 
 // NewServerOptions 创建带有默认值的 ServerOptions 实例.
@@ -51,6 +53,7 @@ func NewServerOptions() *ServerOptions {
 		GRPCOptions:  genericoptions.NewGRPCOptions(),
 		HTTPOptions:  genericoptions.NewHTTPOptions(),
 		MySQLOptions: genericoptions.NewMySQLOptions(),
+		TLSOptions:   genericoptions.NewTLSOptions(),
 	}
 	opts.GRPCOptions.Addr = ":6666"
 	opts.HTTPOptions.Addr = ":5555"
@@ -71,6 +74,8 @@ func (o *ServerOptions) AddFlags(fs *pflag.FlagSet) {
 
 	o.GRPCOptions.AddFlags(fs, "grpc")
 	o.HTTPOptions.AddFlags(fs, "http")
+	o.MySQLOptions.AddFlags(fs, "mysql")
+	o.TLSOptions.AddFlags(fs, "tls")
 }
 
 // Validate 校验 ServerOptions 中的选项是否合法.
@@ -106,5 +111,6 @@ func (o *ServerOptions) Config() (*apiserver.Config, error) {
 		GRPCOptions:  o.GRPCOptions,
 		HTTPOptions:  o.HTTPOptions,
 		MySQLOptions: o.MySQLOptions,
+		TLSOptions:   o.TLSOptions,
 	}, nil
 }
