@@ -65,6 +65,7 @@ func (c *ServerConfig) InstallRESTAPI(engine *gin.Engine) {
 
 	authMiddlewares := []gin.HandlerFunc{
 		mw.AuthnMiddleware(c.retriever),
+		mw.AuthzMiddleware(c.authz),
 	}
 
 	// 注册 v1 版本 API 路由分组

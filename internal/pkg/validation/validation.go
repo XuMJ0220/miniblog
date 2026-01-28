@@ -39,7 +39,7 @@ func isValiPassword(password string) error {
 }
 
 func isValiName(name string) error {
-	if len(name) < 6 || len(name) > 20 {
+	if len(name) < 4 || len(name) > 20 {
 		return errno.ErrInvalidArgument.WithMessage("name must be between 6 and 20 characters long")
 	}
 

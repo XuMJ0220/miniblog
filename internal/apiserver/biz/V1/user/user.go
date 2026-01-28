@@ -11,6 +11,7 @@ import (
 	"miniblog/internal/pkg/log"
 	apiv1 "miniblog/pkg/api/apiserver/v1"
 	"miniblog/pkg/authn"
+	"miniblog/pkg/authz"
 	"miniblog/pkg/store/where"
 	"miniblog/pkg/token"
 	"sync"
@@ -38,14 +39,16 @@ type UserExpansion interface {
 
 type userBiz struct {
 	store store.IStore
+	authz *authz.Authz
 }
 
 // 确保 userBiz 实现了 UserBiz 接口.
 var _ UserBiz = (*userBiz)(nil)
 
-func New(store store.IStore) *userBiz {
+func New(store store.IStore, authz *authz.Authz) *userBiz {
 	return &userBiz{
 		store: store,
+		authz: authz,
 	}
 }
 
@@ -58,6 +61,12 @@ func (b *userBiz) Create(ctx context.Context, rq *apiv1.CreateUserRequest) (*api
 
 	if err := b.store.User().Create(ctx, &userM); err != nil {
 		return nil, err
+	}
+
+	// 添加授权角色
+	if _, err := b.authz.AddGroupingPolicy(userM.UserID, known.RoleUser); err != nil {
+		log.W(ctx).Errorw("Failed to add grouping policy for user", "user", userM.UserID, "role", known.RoleUser)
+		return nil, errno.ErrAddRole.WithMessage(err.Error(), "")
 	}
 
 	return &apiv1.CreateUserResponse{UserID: userM.UserID}, nil
@@ -101,6 +110,12 @@ func (b *userBiz) Delete(ctx context.Context, rq *apiv1.DeleteUserRequest) (*api
 	err := b.store.User().Delete(ctx, where.F("userID", rq.UserID))
 	if err != nil {
 		return nil, err
+	}
+
+	// 删除授权角色
+	if _, err := b.authz.RemoveGroupingPolicy(rq.GetUserID(), known.RoleUser); err != nil {
+		log.W(ctx).Errorw("Failed to remove grouping policy for user", "user", rq.GetUserID(), "role", known.RoleUser)
+		return nil, errno.ErrRemoveRole.WithMessage(err.Error(),"")
 	}
 
 	return &apiv1.DeleteUserResponse{}, nil

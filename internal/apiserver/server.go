@@ -18,6 +18,7 @@ import (
 
 	"miniblog/internal/apiserver/store"
 	mw "miniblog/internal/pkg/middleware/grpc"
+	"miniblog/pkg/authz"
 	genericoptions "miniblog/pkg/options"
 	"miniblog/pkg/store/where"
 	"miniblog/pkg/token"
@@ -72,6 +73,7 @@ type ServerConfig struct {
 	biz       biz.IBiz
 	val       *validation.Validator
 	retriever mw.UserRetriever
+	authz     mw.Authorizer
 }
 
 // NewUnionServer 根据配置创建联合服务器.
@@ -146,11 +148,19 @@ func (cfg *Config) NewServerConfig() (*ServerConfig, error) {
 	}
 	store := store.NewStore(db)
 
+	// 创建授权器
+	authz, err := authz.NewAuthz(db)
+	if err != nil {
+		log.Errorw("Failed to new authorizer", "err", err)
+		return nil, err
+	}
+
 	return &ServerConfig{
 		cfg:       cfg,
-		biz:       biz.NewBiz(store),
+		biz:       biz.NewBiz(store, authz),
 		val:       validation.New(store),
 		retriever: &UserRetriever{store: store},
+		authz:     authz,
 	}, nil
 }
 

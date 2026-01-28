@@ -22,7 +22,7 @@ func AuthnMiddleware(retriever UserRetriever) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		userID, err := token.ParseRequest(c)
 		if err != nil {
-			core.WriteResponse(c, nil, errno.ErrTokenInvalid.WithMessage(err.Error(),""))
+			core.WriteResponse(c, nil, errno.ErrTokenInvalid.WithMessage(err.Error(), ""))
 			c.Abort()
 			return
 		}
@@ -31,7 +31,7 @@ func AuthnMiddleware(retriever UserRetriever) gin.HandlerFunc {
 
 		userM, err := retriever.GetUser(c, userID)
 		if err != nil {
-			core.WriteResponse(c, nil, errno.ErrUnauthenticated.WithMessage(err.Error(),""))
+			core.WriteResponse(c, nil, errno.ErrUnauthenticated.WithMessage(err.Error(), ""))
 			c.Abort()
 			return
 		}

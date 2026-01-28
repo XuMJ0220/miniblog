@@ -4,6 +4,7 @@ import (
 	postv1 "miniblog/internal/apiserver/biz/V1/post"
 	userv1 "miniblog/internal/apiserver/biz/V1/user"
 	"miniblog/internal/apiserver/store"
+	"miniblog/pkg/authz"
 )
 
 // IBiz 定义了业务层需要实现的方法.
@@ -19,21 +20,23 @@ type IBiz interface {
 // biz 是 IBiz 的一个具体实现.
 type biz struct {
 	store store.IStore
+	authz *authz.Authz
 }
 
 // 确保 biz 实现了 IBiz 接口.
 var _ IBiz = (*biz)(nil)
 
 // NewBiz 创建一个 IBiz 类型的实例.
-func NewBiz(store store.IStore) *biz {
+func NewBiz(store store.IStore, authz *authz.Authz) *biz {
 	return &biz{
 		store: store,
+		authz: authz,
 	}
 }
 
 // UserV1 返回一个实现了 UserBiz 接口的实例.
 func (b *biz) UserV1() userv1.UserBiz {
-	return userv1.New(b.store)
+	return userv1.New(b.store,b.authz)
 }
 
 // PostV1 返回一个实现了 PostBiz 接口的实例.

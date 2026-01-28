@@ -44,13 +44,13 @@ func (v *Validator) ValidateUserRules() genericvalidation.Rules {
 		},
 		"Offset": func(value any) error {
 			if value.(int64) < 0 {
-				return errno.ErrInvalidArgument.WithMessage("limit must be greater than 0")
+				return errno.ErrInvalidArgument.WithMessage("offset must be greater than 0")
 			}
 			return nil
 		},
 		"Limit": func(value any) error {
 			if value.(int64) <= 0 {
-				return errno.ErrInvalidArgument.WithMessage("offset cannot be negative")
+				return errno.ErrInvalidArgument.WithMessage("limit cannot be negative")
 			}
 			return nil
 		},
