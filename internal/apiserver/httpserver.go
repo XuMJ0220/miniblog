@@ -44,7 +44,7 @@ func (c *ServerConfig) NewGinServer() server.Server {
 	c.InstallRESTAPI(engine)
 
 	// 创建 HTTP 服务器
-	httpsrv := server.NewHTTPServer(c.cfg.HTTPOptions, engine)
+	httpsrv := server.NewHTTPServer(c.cfg.HTTPOptions, engine, c.cfg.TLSOptions)
 
 	return &ginServer{srv: httpsrv}
 }
